@@ -44,6 +44,7 @@
     <div class="container-fluid px-5 py-4">
         <h2 class="text-center mb-4">Barangay Clearance Form</h2>
         <form id="clearanceForm" novalidate>
+            <input type="hidden" id="status" name="status" value="Pending" />
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="firstName">First Name *</label>

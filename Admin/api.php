@@ -52,8 +52,8 @@ function getTableFields($form_type) {
     $fields = [
         'clearance' => [
             'primary_key' => 'id',
-            'required' => ['first_name', 'middle_name', 'last_name', 'address', 'birth_date', 'age', 'mobile_number', 'purpose', 'student_patient_name', 'student_patient_address', 'relationship', 'email', 'shipping_method', 'status'],
-            'all_fields' => ['first_name', 'middle_name', 'last_name', 'address', 'birth_date', 'age', 'mobile_number', 'years_of_stay', 'purpose', 'student_patient_name', 'student_patient_address', 'relationship', 'email', 'shipping_method', 'status']
+            'required' => ['first_name', 'middle_name', 'last_name', 'address', 'birth_date', 'age', 'mobile_number', 'purpose', 'student_patient_name', 'student_patient_address', 'relationship', 'email', 'shipping_method', 'civil_status', 'status'],
+            'all_fields' => ['first_name', 'middle_name', 'last_name', 'address', 'birth_date', 'age', 'mobile_number', 'years_of_stay', 'purpose', 'student_patient_name', 'student_patient_address', 'relationship', 'email', 'shipping_method', 'civil_status', 'status']
         ],
         'id' => [
             'primary_key' => 'id',
@@ -94,6 +94,7 @@ switch ($method) {
       $stmt->execute();
       $result = $stmt->get_result();
       $data = $result->fetch_assoc();
+      error_log("GET request for ID $id, form_type $form_type: " . json_encode($data));
       echo json_encode($data ?: []);
       exit();
     } else {
@@ -103,21 +104,25 @@ switch ($method) {
       // Clearance
       $result = $conn->query("SELECT id, first_name, purpose AS details, status, 'Clearance' AS form_type FROM barangay_clearance");
       while ($row = $result->fetch_assoc()) {
+        error_log("GET all forms clearance: " . json_encode($row));
         $allForms[] = $row;
       }
       // ID
       $result = $conn->query("SELECT id, first_name, government_id AS details, status, 'ID' AS form_type FROM barangay_id");
       while ($row = $result->fetch_assoc()) {
+        error_log("GET all forms id: " . json_encode($row));
         $allForms[] = $row;
       }
       // Indigency
       $result = $conn->query("SELECT id, first_name, occupation AS details, status, 'Indigency' AS form_type FROM indigency_certificates");
       while ($row = $result->fetch_assoc()) {
+        error_log("GET all forms indigency: " . json_encode($row));
         $allForms[] = $row;
       }
       // Residency
       $result = $conn->query("SELECT id, first_name, purpose_of_certificate AS details, status, 'Residency' AS form_type FROM residency_certificates");
       while ($row = $result->fetch_assoc()) {
+        error_log("GET all forms residency: " . json_encode($row));
         $allForms[] = $row;
       }
 
@@ -144,6 +149,10 @@ switch ($method) {
       http_response_code(400);
       echo json_encode(["error" => "Invalid JSON data received"]);
       exit();
+    }
+    // For clearance, set status to Pending if missing
+    if (strtolower($form_type) === 'clearance' && empty($data['status'])) {
+      $data['status'] = 'Pending';
     }
     foreach ($fields['required'] as $field) {
       if (empty($data[$field])) {
@@ -208,6 +217,18 @@ switch ($method) {
       echo json_encode(["error" => "Invalid JSON data received"]);
       exit();
     }
+    // Normalize status value if present
+    if (isset($data['status'])) {
+      $allowedStatuses = ['pending', 'approved', 'rejected'];
+      $statusLower = strtolower($data['status']);
+      if (in_array($statusLower, $allowedStatuses)) {
+        $data['status'] = ucfirst($statusLower);
+      } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Invalid status value"]);
+        exit();
+      }
+    }
     foreach ($fields['required'] as $field) {
       if (!isset($data[$field])) {
         http_response_code(400);
@@ -235,14 +256,23 @@ switch ($method) {
     $values[] = $id;
     $sql = "UPDATE $table SET " . implode(', ', $setClauses) . " WHERE {$fields['primary_key']} = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param($types, ...$values);
-    if ($stmt->execute()) {
-      echo json_encode(["updated" => $stmt->affected_rows]);
-      exit();
-    } else {
+    if (!$stmt) {
       http_response_code(500);
-      echo json_encode(["error" => "Failed to update form"]);
+      echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
       exit();
+    }
+    $stmt->bind_param($types, ...$values);
+    error_log("PUT request to update ID $id, form_type $form_type with data: " . json_encode($data));
+    $executeResult = $stmt->execute();
+    if ($executeResult) {
+        error_log("Update successful for ID $id, affected rows: " . $stmt->affected_rows);
+        echo json_encode(["updated" => $stmt->affected_rows]);
+        exit();
+    } else {
+        error_log("Update failed for ID $id: " . $stmt->error);
+        http_response_code(500);
+        echo json_encode(["error" => "Failed to update form: " . $stmt->error]);
+        exit();
     }
     break;
 

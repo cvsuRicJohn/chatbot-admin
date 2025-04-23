@@ -42,7 +42,7 @@
       font-size: 14px;
     }
     .view-btn {
-      background-color: #17a2b8;
+      background-color: #007bff; /* changed to blue */
     }
     .approve-btn {
       background-color: #28a745;
@@ -135,11 +135,11 @@
   </table>
 
   <!-- Modal for viewing form details -->
-  <div id="viewModal">
-    <div id="viewModalContent">
-      <button class="close-btn" id="closeViewModal">Close</button>
-      <h2>Form Details</h2>
-      <div id="formDetailsContainer">
+  <div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" style="display:none;">
+    <div id="viewModalContent" class="modal-dialog modal-lg" role="document" style="background-color: white; padding: 20px; border-radius: 5px; margin: 10% auto; max-height: 80vh; overflow-y: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative;">
+      <button class="close-btn btn btn-secondary" id="closeViewModal" style="position: absolute; right: 20px; top: 20px;">Close</button>
+      <h2 id="viewModalLabel" class="text-center mb-4">Form Details</h2>
+      <div id="formDetailsContainer" class="container-fluid px-3">
         <!-- Form details will be displayed here -->
       </div>
     </div>
@@ -245,16 +245,90 @@
     // View form details in modal
     async function viewFormDetails(id, formType) {
       try {
+        console.log('Fetching form details for id:', id, 'formType:', formType);
         const response = await fetch(apiUrl + '/' + id + '?form_type=' + formType);
         if (!response.ok) throw new Error('Failed to fetch form data');
         const formData = await response.json();
+        console.log('Form data received:', formData);
 
         let htmlContent = '';
-        for (const [key, value] of Object.entries(formData)) {
-          if (key === 'id') continue; // skip id field
-          const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-          htmlContent += createDisplayField(label, value);
+
+        if (formType === 'clearance') {
+          htmlContent = `
+            <form id="viewClearanceForm" class="needs-validation" novalidate>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>First Name</label>
+                  <input type="text" class="form-control" value="${formData.first_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Middle Name</label>
+                  <input type="text" class="form-control" value="${formData.middle_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Last Name</label>
+                  <input type="text" class="form-control" value="${formData.last_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>Complete Address</label>
+                  <input type="text" class="form-control" value="${formData.address || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Birth Date</label>
+                  <input type="date" class="form-control" value="${formData.birth_date || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Age</label>
+                  <input type="number" class="form-control" value="${formData.age || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Civil Status</label>
+                  <input type="text" class="form-control" value="${formData.civil_status || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Mobile Number</label>
+                  <input type="tel" class="form-control" value="${formData.mobile_number || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Years of Stay</label>
+                  <input type="number" class="form-control" value="${formData.years_of_stay || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Purpose</label>
+                  <input type="text" class="form-control" value="${formData.purpose || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Name of Student / Patient</label>
+                  <input type="text" class="form-control" value="${formData.student_patient_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Address</label>
+                  <input type="text" class="form-control" value="${formData.student_patient_address || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Relationship</label>
+                  <input type="text" class="form-control" value="${formData.relationship || ''}" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Email</label>
+                  <input type="email" class="form-control" value="${formData.email || ''}" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Shipping Method</label>
+                  <input type="text" class="form-control" value="${formData.shipping_method || ''}" readonly>
+                </div>
+              </div>
+            </form>
+          `;
+        } else {
+          // Default display for other form types
+          for (const [key, value] of Object.entries(formData)) {
+            if (key === 'id') continue; // skip id field
+            const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            htmlContent += createDisplayField(label, value);
+          }
         }
+
         formDetailsContainer.innerHTML = htmlContent;
         viewModal.style.display = "block";
       } catch (error) {
@@ -264,20 +338,20 @@
 
     // Update form status (Approve/Reject)
     async function updateStatus(id, formType, newStatus) {
+      const form = forms.find(f => f.id === id && f.form_type.toLowerCase() === formType);
+      if (!form) return;
+      const updatedForm = { ...form, status: newStatus };
       try {
         const response = await fetch(apiUrl + '/' + id + '?form_type=' + formType, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus, form_type: formType })
+          body: JSON.stringify(updatedForm)
         });
         if (!response.ok) throw new Error('Failed to update status');
         const result = await response.json();
         if (result.updated) {
-          const form = forms.find(f => f.id === id && f.form_type.toLowerCase() === formType);
-          if (form) {
-            form.status = newStatus;
-            renderForms();
-          }
+          form.status = newStatus;
+          renderForms();
         } else {
           alert('Update failed');
         }
@@ -290,13 +364,15 @@
     async function removeForm(id, formType) {
       if (!confirm("Are you sure you want to remove this form?")) return;
       try {
-        const response = await fetch(apiUrl + '/' + id + '?form_type=' + formType, {
+        const url = apiUrl + '/' + id + '?form_type=' + encodeURIComponent(formType.toLowerCase());
+        console.log('DELETE URL:', url);
+        const response = await fetch(url, {
           method: 'DELETE'
         });
         if (!response.ok) throw new Error('Failed to delete form');
         const result = await response.json();
         if (result.deleted) {
-          forms = forms.filter(f => !(f.id === id && f.form_type.toLowerCase() === formType));
+          forms = forms.filter(f => !(f.id === id && f.form_type.toLowerCase() === formType.toLowerCase()));
           renderForms();
         } else {
           alert('Delete failed');
@@ -310,6 +386,14 @@
     closeViewModalBtn.addEventListener("click", () => {
       viewModal.style.display = "none";
       formDetailsContainer.innerHTML = "";
+    });
+
+    // Close modal when clicking outside the modal content
+    viewModal.addEventListener("click", (event) => {
+      if (event.target === viewModal) {
+        viewModal.style.display = "none";
+        formDetailsContainer.innerHTML = "";
+      }
     });
 
     // Initial fetch and render of forms

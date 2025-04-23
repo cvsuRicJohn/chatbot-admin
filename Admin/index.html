@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barangay System Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barangay System Admin Panel - Merged</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,17 +15,18 @@
     h1 {
       text-align: center;
       color: #333;
+      margin-bottom: 20px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
       background-color: #fff;
     }
     th, td {
       padding: 12px;
       border: 1px solid #ddd;
       text-align: left;
+      vertical-align: middle;
     }
     th {
       background-color: #007bff;
@@ -39,9 +42,10 @@
       border-radius: 4px;
       cursor: pointer;
       color: white;
+      font-size: 14px;
     }
-    .edit-btn {
-      background-color: #ffc107;
+    .view-btn {
+      background-color: #007bff;
     }
     .approve-btn {
       background-color: #28a745;
@@ -51,6 +55,18 @@
     }
     .remove-btn {
       background-color: #6c757d;
+    }
+    .status-approved {
+      color: green;
+      font-weight: bold;
+    }
+    .status-rejected {
+      color: red;
+      font-weight: bold;
+    }
+    .status-pending {
+      color: orange;
+      font-weight: bold;
     }
     #editForm {
       display: none;
@@ -84,24 +100,67 @@
       background-color: #6c757d;
       margin-left: 10px;
     }
-    .status-approved {
-      color: green;
-      font-weight: bold;
+    /* Modal styles */
+    #viewModal {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
     }
-    .status-rejected {
-      color: red;
-      font-weight: bold;
+    #viewModalContent {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 5px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
     }
-    .status-pending {
-      color: orange;
+    #viewModalContent h2 {
+      margin-top: 0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #viewModalContent label {
       font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    #viewModalContent input[readonly], #viewModalContent textarea[readonly] {
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      padding: 8px;
+      width: 100%;
+      border-radius: 4px;
+      resize: none;
+    }
+    #viewModalContent button.close-btn {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      position: absolute;
+      right: 20px;
+      top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Barangay System Admin Panel</h1>
-  <table id="formsTable">
-    <thead>
+  <h1>Barangay System Admin Panel - Merged</h1>
+
+  <table id="formsTable" class="table table-striped table-bordered">
+    <thead class="thead-dark">
       <tr>
         <th>ID</th>
         <th>Resident Name</th>
@@ -142,6 +201,17 @@
     </form>
   </div>
 
+  <!-- Modal for viewing form details -->
+  <div id="viewModal">
+    <div id="viewModalContent">
+      <button class="close-btn" id="closeViewModal">Close</button>
+      <h2>Form Details</h2>
+      <div id="formDetailsContainer">
+        <!-- Form details will be displayed here -->
+      </div>
+    </div>
+  </div>
+
   <script>
     const apiUrl = 'api.php';
 
@@ -154,6 +224,10 @@
     const detailsInput = document.getElementById("details");
     const statusInput = document.getElementById("status");
     const cancelEditBtn = document.getElementById("cancelEdit");
+
+    const viewModal = document.getElementById("viewModal");
+    const formDetailsContainer = document.getElementById("formDetailsContainer");
+    const closeViewModalBtn = document.getElementById("closeViewModal");
 
     let forms = [];
 
@@ -178,79 +252,138 @@
 
         tr.innerHTML = `
           <td>${form.id}</td>
-          <td>${form.resident_name}</td>
+          <td>${form.resident_name || form.first_name || ''}</td>
           <td>${form.form_type}</td>
-          <td>${form.details}</td>
+          <td>${form.details || ''}</td>
           <td class="${statusClass}">${form.status}</td>
           <td>
-            <button class="view-btn" onclick="viewForm(${form.id})">View</button>
-            <button class="approve-btn" onclick="updateStatus(${form.id}, 'Approved')">Approve</button>
-            <button class="reject-btn" onclick="updateStatus(${form.id}, 'Rejected')">Reject</button>
-            <button class="remove-btn" onclick="removeForm(${form.id})">Remove</button>
+            <button class="view-btn" onclick="viewFormDetails(${form.id}, '${form.form_type.toLowerCase()}')">View</button>
+            <button class="approve-btn" onclick="updateStatus(${form.id}, '${form.form_type.toLowerCase()}', 'Approved')">Approve</button>
+            <button class="reject-btn" onclick="updateStatus(${form.id}, '${form.form_type.toLowerCase()}', 'Rejected')">Reject</button>
+            <button class="remove-btn" onclick="removeForm(${form.id}, '${form.form_type.toLowerCase()}')">Remove</button>
           </td>
         `;
         formsTableBody.appendChild(tr);
       });
     }
 
+    // View form details in modal with detailed layout per form type
+    async function viewFormDetails(id, formType) {
+      try {
+        const response = await fetch(`${apiUrl}/${id}?form_type=${formType}`);
+        if (!response.ok) throw new Error('Failed to fetch form data');
+        const formData = await response.json();
+
+        let htmlContent = '';
+
+        if (formType === 'clearance') {
+          htmlContent = `
+            <form id="viewClearanceForm" class="needs-validation" novalidate>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label>First Name</label>
+                  <input type="text" class="form-control" value="${formData.first_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Middle Name</label>
+                  <input type="text" class="form-control" value="${formData.middle_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Last Name</label>
+                  <input type="text" class="form-control" value="${formData.last_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>Complete Address</label>
+                  <input type="text" class="form-control" value="${formData.address || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Birth Date</label>
+                  <input type="date" class="form-control" value="${formData.birth_date || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Age</label>
+                  <input type="number" class="form-control" value="${formData.age || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Civil Status</label>
+                  <input type="text" class="form-control" value="${formData.civil_status || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Mobile Number</label>
+                  <input type="tel" class="form-control" value="${formData.mobile_number || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Years of Stay</label>
+                  <input type="number" class="form-control" value="${formData.years_of_stay || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Purpose</label>
+                  <input type="text" class="form-control" value="${formData.purpose || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Name of Student / Patient</label>
+                  <input type="text" class="form-control" value="${formData.student_patient_name || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Address</label>
+                  <input type="text" class="form-control" value="${formData.student_patient_address || ''}" readonly>
+                </div>
+                <div class="form-group col-md-4">
+                  <label>Relationship</label>
+                  <input type="text" class="form-control" value="${formData.relationship || ''}" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Email</label>
+                  <input type="email" class="form-control" value="${formData.email || ''}" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Shipping Method</label>
+                  <input type="text" class="form-control" value="${formData.shipping_method || ''}" readonly>
+                </div>
+              </div>
+            </form>
+          `;
+        } else {
+          // Default display for other form types
+          for (const [key, value] of Object.entries(formData)) {
+            if (key === 'id') continue; // skip id field
+            const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            htmlContent += `<label>${label}</label><p>${value || ''}</p>`;
+          }
+        }
+
+        formDetailsContainer.innerHTML = htmlContent;
+        viewModal.style.display = "block";
+      } catch (error) {
+        alert('Error loading form data: ' + error.message);
+      }
+    }
+
+    // Close the view modal
+    closeViewModalBtn.addEventListener("click", () => {
+      viewModal.style.display = "none";
+      formDetailsContainer.innerHTML = "";
+    });
+
+    // Close modal when clicking outside the modal content
+    viewModal.addEventListener("click", (event) => {
+      if (event.target === viewModal) {
+        viewModal.style.display = "none";
+        formDetailsContainer.innerHTML = "";
+      }
+    });
+
+    // Edit form functionality
     function editForm(id) {
       const form = forms.find(f => f.id === id);
       if (!form) return;
       formIdInput.value = form.id;
-      residentNameInput.value = form.resident_name;
+      residentNameInput.value = form.resident_name || form.first_name || '';
       formTypeInput.value = form.form_type;
-      detailsInput.value = form.details;
-      statusInput.value = form.status;
+      detailsInput.value = form.details || '';
+      statusInput.value = form.status || 'Pending';
       editFormDiv.style.display = "block";
       window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function viewForm(id) {
-      const form = forms.find(f => f.id === id);
-      if (!form) return;
-      alert(`Form Details:\n\nResident Name: ${form.resident_name}\nForm Type: ${form.form_type}\nDetails: ${form.details}\nStatus: ${form.status}`);
-    }
-
-    async function updateStatus(id, newStatus) {
-      const form = forms.find(f => f.id === id);
-      if (!form) return;
-      const updatedForm = { ...form, status: newStatus };
-      try {
-        const response = await fetch(`${apiUrl}/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedForm)
-        });
-        if (!response.ok) throw new Error('Failed to update status');
-        const result = await response.json();
-        if (result.updated) {
-          form.status = newStatus;
-          renderForms();
-        } else {
-          alert('Update failed');
-        }
-      } catch (error) {
-        alert('Error updating status: ' + error.message);
-      }
-    }
-
-    async function removeForm(id) {
-      if (!confirm("Are you sure you want to remove this form?")) return;
-      try {
-        const response = await fetch(`${apiUrl}/${id}`, {
-          method: 'DELETE'
-        });
-        if (!response.ok) throw new Error('Failed to delete form');
-        const result = await response.json();
-        if (result.deleted) {
-          forms = forms.filter(f => f.id !== id);
-          renderForms();
-        } else {
-          alert('Delete failed');
-        }
-      } catch (error) {
-        alert('Error deleting form: ' + error.message);
-      }
     }
 
     formEdit.addEventListener("submit", async function(e) {
@@ -286,8 +419,62 @@
     });
 
     cancelEditBtn.addEventListener("click", function() {
+      // Enable inputs back when closing the form
+      residentNameInput.disabled = false;
+      formTypeInput.disabled = false;
+      detailsInput.disabled = false;
+      statusInput.disabled = false;
+
+      // Show the Save button and reset Cancel button text
+      formEdit.querySelector('button[type="submit"]').style.display = 'inline-block';
+      cancelEditBtn.textContent = 'Cancel';
+
       editFormDiv.style.display = "none";
     });
+
+    async function updateStatus(id, formType, newStatus) {
+      const form = forms.find(f => f.id === id);
+      if (!form) return;
+      const updatedForm = { ...form, status: newStatus };
+      try {
+        const response = await fetch(`${apiUrl}/${id}?form_type=${formType}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedForm)
+        });
+        if (!response.ok) throw new Error('Failed to update status');
+        const result = await response.json();
+        if (result.updated) {
+          form.status = newStatus;
+          renderForms();
+        } else {
+          alert('Update failed');
+        }
+      } catch (error) {
+        alert('Error updating status: ' + error.message);
+      }
+    }
+
+    async function removeForm(id, formType) {
+      if (!confirm("Are you sure you want to remove this form?")) return;
+      try {
+        const url = `${apiUrl}/${id}?form_type=${encodeURIComponent(formType)}`;
+        console.log('DELETE URL:', url);
+        const response = await fetch(url, {
+          method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete form');
+        const result = await response.json();
+        if (result.deleted) {
+          forms = forms.filter(f => !(f.id === id && f.form_type.toLowerCase() === formType));
+          renderForms();
+        } else {
+          alert('Delete failed');
+        }
+      } catch (error) {
+        alert('Error deleting form: ' + error.message);
+      }
+    }
 
     // Initial fetch and render
     fetchForms();
