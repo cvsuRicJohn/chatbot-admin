@@ -78,9 +78,9 @@
                     <div class="invalid-feedback">Please enter a valid age.</div>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="statusField">Status *</label>
-                    <input type="text" class="form-control" id="statusField" name="statusField" required>
-                    <div class="invalid-feedback">Please enter your status.</div>
+                    <label for="civilStatus">Civil Status *</label>
+                    <input type="text" class="form-control" id="civilStatus" name="civilStatus" required>
+                    <div class="invalid-feedback">Please enter your civil status.</div>
                 </div>
     
                 <div class="form-group col-md-4">
@@ -190,7 +190,6 @@
             address: document.getElementById('completeAddress').value.trim(),
             birth_date: document.getElementById('birthDate').value,
             age: parseInt(document.getElementById('age').value),
-            status: document.getElementById('statusField').value.trim(),
             mobile_number: document.getElementById('mobileNumber').value.trim(),
             years_of_stay: document.getElementById('yearsOfStay').value.trim(),
             purpose: document.getElementById('purpose').value.trim(),
@@ -198,7 +197,9 @@
             student_patient_address: document.getElementById('studentPatientAddress').value.trim(),
             relationship: document.getElementById('relationship').value.trim(),
             email: document.getElementById('email').value.trim(),
-            shipping_method: document.getElementById('shippingMethod').value.trim()
+            shipping_method: document.getElementById('shippingMethod').value.trim(),
+            civil_status: document.getElementById('civilStatus').value.trim(),
+            form_type: "Clearance"
           };
 
           const response = await fetch(apiUrl, {

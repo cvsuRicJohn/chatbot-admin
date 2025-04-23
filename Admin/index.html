@@ -183,7 +183,7 @@
           <td>${form.details}</td>
           <td class="${statusClass}">${form.status}</td>
           <td>
-            <button class="edit-btn" onclick="editForm(${form.id})">Edit</button>
+            <button class="view-btn" onclick="viewForm(${form.id})">View</button>
             <button class="approve-btn" onclick="updateStatus(${form.id}, 'Approved')">Approve</button>
             <button class="reject-btn" onclick="updateStatus(${form.id}, 'Rejected')">Reject</button>
             <button class="remove-btn" onclick="removeForm(${form.id})">Remove</button>
@@ -203,6 +203,12 @@
       statusInput.value = form.status;
       editFormDiv.style.display = "block";
       window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function viewForm(id) {
+      const form = forms.find(f => f.id === id);
+      if (!form) return;
+      alert(`Form Details:\n\nResident Name: ${form.resident_name}\nForm Type: ${form.form_type}\nDetails: ${form.details}\nStatus: ${form.status}`);
     }
 
     async function updateStatus(id, newStatus) {
