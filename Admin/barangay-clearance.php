@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barangay Clearance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="image/imus-logo.png">
+    <link rel="stylesheet" href="css/services.css" />
+</head>
+<body>
+
+    <!-- Header and Navigation -->
+    <div style="background-color: #0056b3; color: white; display: flex; justify-content: space-between; align-items: center; padding: 5px 20px; font-family: Arial, sans-serif; font-size: 14px;">
+        <div>
+          <strong>GOVPH</strong> | The Official Website of Barangay Bucandala 1, Imus Cavite
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <a href="#" style="color: white;"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-youtube"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-twitter"></i></a>
+          <a href="tel:+464025614" style="color: white;"><i class="fas fa-phone-alt"></i></a>
+          <span id="dateTimePH"></span>
+        </div>
+      </div>
+
+      <nav>
+        <a href="index.php">Home</a>
+        <div class="dropdown">
+          <a href="#" class="dropbtn">Services ▾</a>
+          <div class="dropdown-content">
+            <a href="barangay-clearance.php">Barangay Clearance</a>
+            <a href="certificate-of-indigency.php">Certificate of Indigency</a>
+            <a href="certificate-of-residency.php">Certificate of Residency</a>
+            <a href="barangay-id.php">Barangay ID</a>
+          </div>
+        </div>
+      
+        <a href="contact.php">Contact</a>
+        <a href="faq.php">FAQ</a>
+      </nav>
+
+    <div class="container-fluid px-5 py-4">
+        <h2 class="text-center mb-4">Barangay Clearance Form</h2>
+        <form id="clearanceForm" novalidate>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    <div class="invalid-feedback">Please enter your first name.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="middleName">Middle Name *</label>
+                    <input type="text" class="form-control" id="middleName" name="middleName" required>
+                    <div class="invalid-feedback">Please enter your middle name.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    <div class="invalid-feedback">Please enter your last name.</div>
+                </div>
+    
+                <div class="form-group col-md-12">
+                    <label for="completeAddress">Complete Address *</label>
+                    <input type="text" class="form-control" id="completeAddress" name="completeAddress" required>
+                    <div class="invalid-feedback">Please enter your complete address.</div>
+                </div>
+    
+                <div class="form-group col-md-4">
+                    <label for="birthDate">Birth Date *</label>
+                    <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                    <div class="invalid-feedback">Please enter your birth date.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="age">Age *</label>
+                    <input type="number" class="form-control" id="age" name="age" required min="0">
+                    <div class="invalid-feedback">Please enter a valid age.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="statusField">Status *</label>
+                    <input type="text" class="form-control" id="statusField" name="statusField" required>
+                    <div class="invalid-feedback">Please enter your status.</div>
+                </div>
+    
+                <div class="form-group col-md-4">
+                    <label for="mobileNumber">Mobile Number *</label>
+                    <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber" required pattern="^\+?[0-9\s\-]{7,15}$">
+                    <div class="invalid-feedback">Please enter a valid mobile number.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="yearsOfStay">Years of Stay</label>
+                    <input type="number" class="form-control" id="yearsOfStay" name="yearsOfStay" min="0">
+                    <div class="invalid-feedback">Please enter a valid number of years.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="purpose">Purpose *</label>
+                    <input type="text" class="form-control" id="purpose" name="purpose" required>
+                    <div class="invalid-feedback">Please enter the purpose.</div>
+                </div>
+    
+                <div class="form-group col-md-4">
+                    <label for="studentPatientName">Name of Student / Patient *</label>
+                    <input type="text" class="form-control" id="studentPatientName" name="studentPatientName" required>
+                    <div class="invalid-feedback">Please enter the name of the student or patient.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="studentPatientAddress">Address *</label>
+                    <input type="text" class="form-control" id="studentPatientAddress" name="studentPatientAddress" required>
+                    <div class="invalid-feedback">Please enter the address.</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="relationship">Relationship *</label>
+                    <input type="text" class="form-control" id="relationship" name="relationship" required>
+                    <div class="invalid-feedback">Please enter the relationship.</div>
+                </div>
+    
+                <div class="form-group col-md-6">
+                    <label for="email">Email *</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="shippingMethod">Shipping Method *</label>
+                    <select class="form-control" id="shippingMethod" name="shippingMethod" required>
+                        <option value="">Select a shipping method</option>
+                        <option>PICK UP (You can claim within 24 hours upon submission. Claimable from 10am-5pm)</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a shipping method.</div>
+                </div>
+            </div>
+    
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-5">Send Message</button>
+            </div>
+        </form>
+    </div>    
+
+    <div class="footer">
+        <div class="footer-content">
+          <img src="image/imus-logo.png" alt="Barangay Logo" class="footer-logo">
+          <div class="footer-text">
+            <p>Copyright &copy; 2025 The Official Website of Barangay Bucandala 1, Imus Cavite. All Rights Reserved.</p>
+            <p>Bucandala 1 Barangay Hall, Imus, Cavite, Philippines 4103.</p>
+            <p>Call Us Today: +46 40 256 14</p>
+          </div>
+        </div>
+    </div>
+
+    <iframe src="chatbot.html"
+    style="position: fixed; bottom: 10px; right: 10px; width: 340px; height: 800px; border: none; z-index: 999;"> 
+    </iframe>
+
+    <script>
+      const apiUrl = 'api.php';
+      
+      const clearanceForm = document.getElementById('clearanceForm');
+
+      // Bootstrap form validation
+      clearanceForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!clearanceForm.checkValidity()) {
+          clearanceForm.classList.add('was-validated');
+          return;
+        }
+
+        // Remove existing alerts
+        const existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+
+        // Get the submit button
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+
+        // Set loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Processing...
+        `;
+
+        try {
+          // Prepare form data
+          const formData = {
+            first_name: document.getElementById('firstName').value.trim(),
+            middle_name: document.getElementById('middleName').value.trim(),
+            last_name: document.getElementById('lastName').value.trim(),
+            address: document.getElementById('completeAddress').value.trim(),
+            birth_date: document.getElementById('birthDate').value,
+            age: parseInt(document.getElementById('age').value),
+            status: document.getElementById('statusField').value.trim(),
+            mobile_number: document.getElementById('mobileNumber').value.trim(),
+            years_of_stay: document.getElementById('yearsOfStay').value.trim(),
+            purpose: document.getElementById('purpose').value.trim(),
+            student_patient_name: document.getElementById('studentPatientName').value.trim(),
+            student_patient_address: document.getElementById('studentPatientAddress').value.trim(),
+            relationship: document.getElementById('relationship').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            shipping_method: document.getElementById('shippingMethod').value.trim()
+          };
+
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          });
+
+          // Check if response is JSON
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Invalid response: ${text.substring(0, 100)}`);
+          }
+
+          const result = await response.json();
+
+          if (!result.id) {
+            throw new Error(result.error || 'Submission failed');
+          }
+
+          // Show success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'alert alert-success mt-3';
+          successDiv.textContent = 'Form submitted successfully!';
+          this.parentNode.insertBefore(successDiv, this.nextSibling);
+
+          // Reset form and validation state
+          this.reset();
+          this.classList.remove('was-validated');
+
+        } catch (error) {
+          console.error('Submission error:', error);
+
+          // Show error message
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'alert alert-danger mt-3';
+          errorDiv.textContent = error.message;
+          this.parentNode.insertBefore(errorDiv, this.nextSibling);
+
+        } finally {
+          // Reset button state
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+      });
+    </script>
+
+</body>
+</html>
