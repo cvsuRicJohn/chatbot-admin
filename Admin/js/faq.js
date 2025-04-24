@@ -1,6 +1,3 @@
-
-        
-        
         //date and time in PH.
         function updateDateTimePH() {
             const options = { timeZone: 'Asia/Manila', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
@@ -10,3 +7,8 @@
           setInterval(updateDateTimePH, 1000);
           updateDateTimePH();
 
+      //nav js//
+      window.addEventListener("scroll", function () {
+        const nav = document.querySelector("nav");
+        nav.classList.toggle("scrolled", window.scrollY > 50);
+      });

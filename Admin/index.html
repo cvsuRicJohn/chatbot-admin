@@ -2,482 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Barangay System Admin Panel - Merged</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bucandala 1 | Official Website of Barangay Bucandala 1</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
-    }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
-      text-align: left;
-      vertical-align: middle;
-    }
-    th {
-      background-color: #007bff;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    button {
-      margin-right: 5px;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      color: white;
-      font-size: 14px;
-    }
-    .view-btn {
-      background-color: #007bff;
-    }
-    .approve-btn {
-      background-color: #28a745;
-    }
-    .reject-btn {
-      background-color: #dc3545;
-    }
-    .remove-btn {
-      background-color: #6c757d;
-    }
-    .status-approved {
-      color: green;
-      font-weight: bold;
-    }
-    .status-rejected {
-      color: red;
-      font-weight: bold;
-    }
-    .status-pending {
-      color: orange;
-      font-weight: bold;
-    }
-    #editForm {
-      display: none;
-      background-color: #fff;
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    #editForm label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    #editForm input, #editForm textarea, #editForm select {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    #editForm button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #editForm button.cancel-btn {
-      background-color: #6c757d;
-      margin-left: 10px;
-    }
-    /* Modal styles */
-    #viewModal {
-      display: none;
-      position: fixed;
-      z-index: 1050;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
-    }
-    #viewModalContent {
-      background-color: #fff;
-      margin: 5% auto;
-      padding: 20px;
-      border-radius: 5px;
-      width: 90%;
-      max-width: 900px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      position: relative;
-    }
-    #viewModalContent h2 {
-      margin-top: 0;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #viewModalContent label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-    #viewModalContent input[readonly], #viewModalContent textarea[readonly] {
-      background-color: #e9ecef;
-      border: 1px solid #ced4da;
-      padding: 8px;
-      width: 100%;
-      border-radius: 4px;
-      resize: none;
-    }
-    #viewModalContent button.close-btn {
-      background-color: #6c757d;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 15px;
-      position: absolute;
-      right: 20px;
-      top: 20px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="image/imus-logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <h1>Barangay System Admin Panel - Merged</h1>
 
-  <table id="formsTable" class="table table-striped table-bordered">
-    <thead class="thead-dark">
-      <tr>
-        <th>ID</th>
-        <th>Resident Name</th>
-        <th>Form Type</th>
-        <th>Details</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Form entries will be populated here -->
-    </tbody>
-  </table>
-
-  <div id="editForm">
-    <h2>Edit Form</h2>
-    <form id="formEdit">
-      <input type="hidden" id="formId" />
-      <label for="residentName">Resident Name</label>
-      <input type="text" id="residentName" required />
-      <label for="formType">Form Type</label>
-      <select id="formType" required>
-        <option value="Clearance">Clearance</option>
-        <option value="Permit">Permit</option>
-        <option value="Complaint">Complaint</option>
-        <option value="Other">Other</option>
-      </select>
-      <label for="details">Details</label>
-      <textarea id="details" rows="4" required></textarea>
-      <label for="status">Status</label>
-      <select id="status" required>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-      </select>
-      <button type="submit">Save</button>
-      <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
-    </form>
-  </div>
-
-  <!-- Modal for viewing form details -->
-  <div id="viewModal">
-    <div id="viewModalContent">
-      <button class="close-btn" id="closeViewModal">Close</button>
-      <h2>Form Details</h2>
-      <div id="formDetailsContainer">
-        <!-- Form details will be displayed here -->
+    <div style="background-color: #0056b3; color: white; display: flex; justify-content: space-between; align-items: center; padding: 5px 20px; font-family: Arial, sans-serif; font-size: 14px;">
+        <div>
+          <strong>GOVPH</strong> | The Official Website of Barangay Bucandala 1, Imus Cavite
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <a href="#" style="color: white;"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-youtube"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-twitter"></i></a>
+          <a href="tel:+464025614" style="color: white;"><i class="fas fa-phone-alt"></i></a>
+          <span id="dateTimePH"></span>
+        </div>
       </div>
+
+  <div style="background-color: #12c009; color: black; font-weight: bold; height: 50px; overflow: hidden; display: flex; align-items: center;">
+    <marquee behavior="scroll" direction="left" scrollamount="5" style="width: 100%;">
+      🔔 Latest Announcement: Barangay Assembly on April 10, 2025 | Free Medical Check-up on April 15, 2025 | Stay Updated with Barangay Bucandala 1!
+    </marquee>
+  </div>
+  
+  <nav>
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+      <a href="#" class="dropbtn">Services ▾</a>
+      <div class="dropdown-content">
+        <a href="barangay-clearance.html">Barangay Clearance</a>
+        <a href="certificate-of-indigency.html">Certificate of Indigency</a>
+        <a href="certificate-of-residency.html">Certificate of Residency</a>
+        <a href="barangay-id.html">Barangay ID</a>
+      </div>
+    </div>
+    <a href="contact.html">About</a>
+    <a href="faq.html">FAQs</a>
+  </nav>
+  
+  <div class="hero-section">
+    <img src="image/imus-logo.png" alt="" class="hero-image">
+    <img src="image/logo.png" alt="" class="hero">
+    <div class="text-overlay">
+      <h4>Discover The District</h4>
+      <h1 class="main-heading"><strong>Barangay Bucandala 1</strong></h1>
+      <p>Cavite, get your opportunity to move forward together.</p>
+      <a href="https://www.facebook.com/profile.php?id=100085126650282" class="learn-more">Visit Our Facebook Page →</a>
     </div>
   </div>
 
-  <script>
-    const apiUrl = 'api.php';
+  <section class="about-section" data-aos="fade-up" data-aos-duration="1000">
+    <div class="container-about">
+      <div class="about-left">
+        <img src="image/team.jpg" alt="Barangay Bucandala 1 Team" class="about-image">
+      </div>
+      <div class="about-right">
+        <h3>About us</h3>
+        <h1>If you change your city,<br>you're changing the world.</h1>
+        <p>Barangay Bucandala 1 is determined to address everything that hinders its way to be the best.</p>
 
-    const formsTableBody = document.querySelector("#formsTable tbody");
-    const editFormDiv = document.getElementById("editForm");
-    const formEdit = document.getElementById("formEdit");
-    const formIdInput = document.getElementById("formId");
-    const residentNameInput = document.getElementById("residentName");
-    const formTypeInput = document.getElementById("formType");
-    const detailsInput = document.getElementById("details");
-    const statusInput = document.getElementById("status");
-    const cancelEditBtn = document.getElementById("cancelEdit");
+        <div class="about-buttons">
+          <button class="about-btn" onclick="showContent('mission')">Our Mission</button>
+          <button class="about-btn" onclick="showContent('vision')">Our Vision</button>
+          <button class="about-btn" onclick="showContent('goal')">Our Goal</button>
+        </div>
 
-    const viewModal = document.getElementById("viewModal");
-    const formDetailsContainer = document.getElementById("formDetailsContainer");
-    const closeViewModalBtn = document.getElementById("closeViewModal");
+        <p class="about-description" id="content-text">
+          A Barangay that is God-centered, competent, orderly, honest, peaceful, credible, gender responsive and abides the Code of Conduct.
+        </p>
 
-    let forms = [];
+        <div class="contact-info">
+          <p><strong>Call To Ask Any Questions</strong></p>
+          <p class="contact-number">+46 40 256 14</p>
+          <p><strong>Barangay Captain</strong></p>
+          <p class="captain-name" style="font-size: 30px;" >SANTIAGUEL, FERDINAND APOLINAR</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="map-section"data-aos="fade-up" data-aos-duration="1000">
+    <h2 class="map-title"><strong>Barangay Bucandala 1 MAP</strong></h2>
+    <div class="map-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3864.3418477936393!2d120.93009625999409!3d14.40744677920732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397d3b116ec03eb%3A0x4097af86012cb153!2sBarangay%20Hall%20Bucandala%20I!5e0!3m2!1sen!2sph!4v1745208603455!5m2!1sen!2sph" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
 
-    async function fetchForms() {
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Failed to fetch forms');
-        forms = await response.json();
-        renderForms();
-      } catch (error) {
-        alert('Error fetching forms: ' + error.message);
-      }
-    }
+      <!-- Contact Form -->
+  <section class="contact-section"data-aos="fade-up" data-aos-duration="1000">
+    <div class="contact-form">
+      <h2>For Inquiries and Concerns, Contact Us</h2>
+      <form>
+        <div class="form-row">
+          <input type="text" placeholder="Name" class="form-input" required>
+          <input type="email" placeholder="Email" class="form-input" required>
+        </div>
+        <input type="text" placeholder="Subject" class="form-input full-width" required>
+        <textarea placeholder="Message" class="form-textarea" required></textarea>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
+    </div>
+  
+    <!-- Contact Info -->
+    <div class="contact-info-block">
+      <h2 class="contact-highlight">Contact Information</h2>
+      <h4><strong>Barangay Bucandala 1, Imus, Cavite</strong></h4>
+      <p>📍 Barangay Hall, Barangay Bucandala 1, Imus, Cavite Philippines 4103</p>
+      <p>✉️ <a href="mailto:secretariat@barangay17cagayandeoro.ph">barangaybucana1@gmail.com</a></p>
+    </div>
+  </section>
+  
+  <div class="footer">
+    <div class="footer-content">
+      <img src="image/imus-logo.png" alt="Barangay Logo" class="footer-logo">
+      <div class="footer-text">
+        <p>Copyright &copy; 2025 The Official Website of Barangay Bucandala 1, Imus Cavite. All Rights Reserved.</p>
+        <p>Bucandala 1 Barangay Hall, Imus, Cavite, Philippines 4103.</p>
+        <p>Call Us Today: +46 40 256 14</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Chatbot iframe -->
+  <iframe src="chatbot.html"
+    style="position: fixed; bottom: 10px; right: 10px; width: 340px; height: 800px; border: none; z-index: 999;">
+  </iframe>
 
-    function renderForms() {
-      formsTableBody.innerHTML = "";
-      forms.forEach(form => {
-        const tr = document.createElement("tr");
-
-        const statusClass = form.status === "Approved" ? "status-approved" :
-                            form.status === "Rejected" ? "status-rejected" : "status-pending";
-
-        tr.innerHTML = `
-          <td>${form.id}</td>
-          <td>${form.resident_name || form.first_name || ''}</td>
-          <td>${form.form_type}</td>
-          <td>${form.details || ''}</td>
-          <td class="${statusClass}">${form.status}</td>
-          <td>
-            <button class="view-btn" onclick="viewFormDetails(${form.id}, '${form.form_type.toLowerCase()}')">View</button>
-            <button class="approve-btn" onclick="updateStatus(${form.id}, '${form.form_type.toLowerCase()}', 'Approved')">Approve</button>
-            <button class="reject-btn" onclick="updateStatus(${form.id}, '${form.form_type.toLowerCase()}', 'Rejected')">Reject</button>
-            <button class="remove-btn" onclick="removeForm(${form.id}, '${form.form_type.toLowerCase()}')">Remove</button>
-          </td>
-        `;
-        formsTableBody.appendChild(tr);
-      });
-    }
-
-    // View form details in modal with detailed layout per form type
-    async function viewFormDetails(id, formType) {
-      try {
-        const response = await fetch(`${apiUrl}/${id}?form_type=${formType}`);
-        if (!response.ok) throw new Error('Failed to fetch form data');
-        const formData = await response.json();
-
-        let htmlContent = '';
-
-        if (formType === 'clearance') {
-          htmlContent = `
-            <form id="viewClearanceForm" class="needs-validation" novalidate>
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                  <label>First Name</label>
-                  <input type="text" class="form-control" value="${formData.first_name || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Middle Name</label>
-                  <input type="text" class="form-control" value="${formData.middle_name || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Last Name</label>
-                  <input type="text" class="form-control" value="${formData.last_name || ''}" readonly>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Complete Address</label>
-                  <input type="text" class="form-control" value="${formData.address || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Birth Date</label>
-                  <input type="date" class="form-control" value="${formData.birth_date || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Age</label>
-                  <input type="number" class="form-control" value="${formData.age || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Civil Status</label>
-                  <input type="text" class="form-control" value="${formData.civil_status || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Mobile Number</label>
-                  <input type="tel" class="form-control" value="${formData.mobile_number || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Years of Stay</label>
-                  <input type="number" class="form-control" value="${formData.years_of_stay || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Purpose</label>
-                  <input type="text" class="form-control" value="${formData.purpose || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Name of Student / Patient</label>
-                  <input type="text" class="form-control" value="${formData.student_patient_name || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Address</label>
-                  <input type="text" class="form-control" value="${formData.student_patient_address || ''}" readonly>
-                </div>
-                <div class="form-group col-md-4">
-                  <label>Relationship</label>
-                  <input type="text" class="form-control" value="${formData.relationship || ''}" readonly>
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Email</label>
-                  <input type="email" class="form-control" value="${formData.email || ''}" readonly>
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Shipping Method</label>
-                  <input type="text" class="form-control" value="${formData.shipping_method || ''}" readonly>
-                </div>
-              </div>
-            </form>
-          `;
-        } else {
-          // Default display for other form types
-          for (const [key, value] of Object.entries(formData)) {
-            if (key === 'id') continue; // skip id field
-            const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            htmlContent += `<label>${label}</label><p>${value || ''}</p>`;
-          }
-        }
-
-        formDetailsContainer.innerHTML = htmlContent;
-        viewModal.style.display = "block";
-      } catch (error) {
-        alert('Error loading form data: ' + error.message);
-      }
-    }
-
-    // Close the view modal
-    closeViewModalBtn.addEventListener("click", () => {
-      viewModal.style.display = "none";
-      formDetailsContainer.innerHTML = "";
-    });
-
-    // Close modal when clicking outside the modal content
-    viewModal.addEventListener("click", (event) => {
-      if (event.target === viewModal) {
-        viewModal.style.display = "none";
-        formDetailsContainer.innerHTML = "";
-      }
-    });
-
-    // Edit form functionality
-    function editForm(id) {
-      const form = forms.find(f => f.id === id);
-      if (!form) return;
-      formIdInput.value = form.id;
-      residentNameInput.value = form.resident_name || form.first_name || '';
-      formTypeInput.value = form.form_type;
-      detailsInput.value = form.details || '';
-      statusInput.value = form.status || 'Pending';
-      editFormDiv.style.display = "block";
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    formEdit.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const id = parseInt(formIdInput.value);
-      const updatedForm = {
-        resident_name: residentNameInput.value.trim(),
-        form_type: formTypeInput.value,
-        details: detailsInput.value.trim(),
-        status: statusInput.value
-      };
-      try {
-        const response = await fetch(`${apiUrl}/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedForm)
-        });
-        if (!response.ok) throw new Error('Failed to update form');
-        const result = await response.json();
-        if (result.updated) {
-          const formIndex = forms.findIndex(f => f.id === id);
-          if (formIndex !== -1) {
-            forms[formIndex] = { id, ...updatedForm };
-            renderForms();
-            editFormDiv.style.display = "none";
-          }
-        } else {
-          alert('Update failed');
-        }
-      } catch (error) {
-        alert('Error updating form: ' + error.message);
-      }
-    });
-
-    cancelEditBtn.addEventListener("click", function() {
-      // Enable inputs back when closing the form
-      residentNameInput.disabled = false;
-      formTypeInput.disabled = false;
-      detailsInput.disabled = false;
-      statusInput.disabled = false;
-
-      // Show the Save button and reset Cancel button text
-      formEdit.querySelector('button[type="submit"]').style.display = 'inline-block';
-      cancelEditBtn.textContent = 'Cancel';
-
-      editFormDiv.style.display = "none";
-    });
-
-    async function updateStatus(id, formType, newStatus) {
-      const form = forms.find(f => f.id === id);
-      if (!form) return;
-      const updatedForm = { ...form, status: newStatus };
-      try {
-        const response = await fetch(`${apiUrl}/${id}?form_type=${formType}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedForm)
-        });
-        if (!response.ok) throw new Error('Failed to update status');
-        const result = await response.json();
-        if (result.updated) {
-          form.status = newStatus;
-          renderForms();
-        } else {
-          alert('Update failed');
-        }
-      } catch (error) {
-        alert('Error updating status: ' + error.message);
-      }
-    }
-
-    async function removeForm(id, formType) {
-      if (!confirm("Are you sure you want to remove this form?")) return;
-      try {
-        const url = `${apiUrl}/${id}?form_type=${encodeURIComponent(formType)}`;
-        console.log('DELETE URL:', url);
-        const response = await fetch(url, {
-          method: 'DELETE'
-        });
-        if (!response.ok) throw new Error('Failed to delete form');
-        const result = await response.json();
-        if (result.deleted) {
-          forms = forms.filter(f => !(f.id === id && f.form_type.toLowerCase() === formType));
-          renderForms();
-        } else {
-          alert('Delete failed');
-        }
-      } catch (error) {
-        alert('Error deleting form: ' + error.message);
-      }
-    }
-
-    // Initial fetch and render
-    fetchForms();
-  </script>
+  <script src="js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  
 </body>
 </html>

@@ -1,7 +1,4 @@
-        body {
-            font-family: Arial, sans-serif;
-        }
- 
+
         .logo {
             width: 60px;
             height: auto;
@@ -14,8 +11,31 @@
             background-color: #ffffff;
             padding: 20px;
             text-align: center;
-            position: relative; /* important for z-index to take effect */
-            z-index: 10;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); /* slower and smoother */
+            box-shadow: none;
+            transform: translateY(0);
+          }
+          
+        /* When scrolled */
+        nav.scrolled {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            animation: slideDown 0.6s ease-in-out forwards;
+          }
+        
+        /* Keyframes with subtle slide */
+        @keyframes slideDown {
+            0% {
+              transform: translateY(-20px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
           }
           
           nav a {
@@ -124,6 +144,8 @@
             background: url('../image/landmark.JPG') no-repeat center center fixed;
             background-size: cover;
             position: relative;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
         }
 
         /* Adding an overlay for better text contrast */

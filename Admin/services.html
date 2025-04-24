@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barangay Website - Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="image/imus-logo.png">
+    <link rel="stylesheet" href="css/services.css" />
+</head>
+<body>
+
+    <div style="background-color: #0056b3; color: white; display: flex; justify-content: space-between; align-items: center; padding: 5px 20px; font-family: Arial, sans-serif; font-size: 14px;">
+        <div>
+          <strong>GOVPH</strong> | The Official Website of Barangay Bucandala 1, Imus Cavite
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <a href="#" style="color: white;"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-youtube"></i></a>
+          <a href="#" style="color: white;"><i class="fab fa-twitter"></i></a>
+          <a href="tel:+464025614" style="color: white;"><i class="fas fa-phone-alt"></i></a>
+          <span id="dateTimePH"></span>
+        </div>
+      </div>
+
+    <div style="background-color: #12c009; color: black; font-weight: bold; height: 50px; overflow: hidden; display: flex; align-items: center;">
+        <marquee behavior="scroll" direction="left" scrollamount="5" style="width: 100%;">
+            🔔 Latest Announcement: Barangay Assembly on April 10, 2025 | Free Medical Check-up on April 15, 2025 | Stay Updated with Barangay Bucandala 1!
+        </marquee>
+    </div>
+   
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+    </nav>
+    
+
+    <div class="container content">
+        <h2 style="text-align: center;">Our Services</h2>
+        <ul class="services-list">
+            <!-- Barangay Clearance -->
+            <li onclick="toggleForm('formBarangayClearance', this)">
+                <div class="service-header">
+                    <i class="fas fa-file-alt icon"></i>
+                    Barangay Clearance
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+            </li>
+            <div id="formBarangayClearance" class="service-form">
+                <form>
+                    <div class="form-group">
+                        <label for="fullNameBarangayClearance">Full Name (First, Middle, Last)</label>
+                        <input type="text" class="form-control" id="fullNameBarangayClearance" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirthBarangayClearance">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirthBarangayClearance">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressBarangayClearance">Address (Current residence in the barangay)</label>
+                        <input type="text" class="form-control" id="addressBarangayClearance" placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="govIDBarangayClearance">Government-issued ID (e.g., Driver's License, Passport, or Postal ID)</label>
+                        <input type="text" class="form-control" id="govIDBarangayClearance" placeholder="Enter ID number">
+                    </div>
+                    <div class="form-group">
+                        <label for="purposeBarangayClearance">Purpose of Clearance (e.g., employment, business, travel, loan application, etc.)</label>
+                        <input type="text" class="form-control" id="purposeBarangayClearance" placeholder="Enter the purpose">
+                    </div>
+                    <div class="form-group">
+                        <label for="civilStatusBarangayClearance">Civil Status (Single, Married, Widowed, or Divorced)</label>
+                        <select class="form-control" id="civilStatusBarangayClearance">
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="widowed">Widowed</option>
+                            <option value="divorced">Divorced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="proofBarangayClearance">Proof of Residency (e.g., Barangay Certificate of Residency)</label>
+                        <input type="text" class="form-control" id="proofBarangayClearance" placeholder="Enter proof of residency">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
+            <!-- Certificate of  Indigency -->
+            <li onclick="toggleForm('formCertificateOfIndigency', this)">
+                <div class="service-header">
+                    <i class="fas fa-file-alt icon"></i>
+                    Certificate of Indigency
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+            </li>
+            <div id="formCertificateOfIndigency" class="service-form">            
+                <form>
+                    <div class="form-group">
+                        <label for="fullNameIndigency">Full Name (First, Middle, Last)</label>
+                        <input type="text" class="form-control" id="fullNameIndigency" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirthIndigency">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirthIndigency">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressIndigency">Address (Current residential address)</label>
+                        <input type="text" class="form-control" id="addressIndigency" placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="civilStatusIndigency">Civil Status (Single, Married, Widowed, or Divorced)</label>
+                        <select class="form-control" id="civilStatusIndigency">
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="widowed">Widowed</option>
+                            <option value="divorced">Divorced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupationIndigency">Occupation (If employed, state job; if not, indicate unemployment)</label>
+                        <input type="text" class="form-control" id="occupationIndigency" placeholder="Enter occupation">
+                    </div>
+                    <div class="form-group">
+                        <label for="monthlyIncomeIndigency">Monthly Income (If any, specify the amount)</label>
+                        <input type="number" class="form-control" id="monthlyIncomeIndigency" placeholder="Enter monthly income">
+                    </div>
+                    <div class="form-group">
+                        <label for="proofResidencyIndigency">Proof of Residency (Barangay Certificate of Residency)</label>
+                        <input type="text" class="form-control" id="proofResidencyIndigency" placeholder="Enter proof of residency">
+                    </div>
+                    <div class="form-group">
+                        <label for="govIDIndigency">Valid Government-issued ID (e.g., Driver’s License, Postal ID)</label>
+                        <input type="text" class="form-control" id="govIDIndigency" placeholder="Enter government-issued ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="spouseNameIndigency">Name of Spouse (If applicable)</label>
+                        <input type="text" class="form-control" id="spouseNameIndigency" placeholder="Enter spouse name">
+                    </div>
+                    <div class="form-group">
+                        <label for="numDependentsIndigency">Number of Dependents (If any)</label>
+                        <input type="number" class="form-control" id="numDependentsIndigency" placeholder="Enter number of dependents">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
+
+            <li onclick="toggleForm('formCertificateOfResidency', this)">
+                <div class="service-header">
+                    <i class="fas fa-file-alt icon"></i>
+                            Certificate of Residency
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+            </li>
+            <div id="formCertificateOfResidency" class="service-form">            
+                <form>
+                    <div class="form-group">
+                        <label for="fullNameResidency">Full Name (First, Middle, Last)</label>
+                        <input type="text" class="form-control" id="fullNameResidency" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirthResidency">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirthResidency">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressResidency">Complete Address (Current residence in the barangay)</label>
+                        <input type="text" class="form-control" id="addressResidency" placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="govIDResidency">Government-issued ID (e.g., Driver’s License, Passport, Postal ID)</label>
+                        <input type="text" class="form-control" id="govIDResidency" placeholder="Enter government-issued ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="proofResidency">Proof of Residency (Additional proof may be required, such as utility bills or lease agreements)</label>
+                        <input type="text" class="form-control" id="proofResidency" placeholder="Enter proof of residency">
+                    </div>
+                    <div class="form-group">
+                        <label for="businessDetailsResidency">Barangay Business or Employment Details (If applicable, such as business address or employer’s name)</label>
+                        <input type="text" class="form-control" id="businessDetailsResidency" placeholder="Enter business or employer details">
+                    </div>
+                    <div class="form-group">
+                        <label for="purposeResidency">Purpose of Certificate (e.g., to apply for a job, business permit, or legal document)</label>
+                        <input type="text" class="form-control" id="purposeResidency" placeholder="Enter purpose of certificate">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
+            <!-- Barangay Id -->
+            <li onclick="toggleForm('formBarangayid', this)">
+                <div class="service-header">
+                    <i class="fas fa-file-alt icon"></i>
+                            Barangay Id
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+            </li>
+            <div id="formBarangayid" class="service-form">            
+                <form>
+                    <div class="form-group">
+                        <label for="namePublicAssistance">Full Name</label>
+                        <input type="text" class="form-control" id="namePublicAssistance" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPublicAssistance">Contact Number</label>
+                        <input type="text" class="form-control" id="contactPublicAssistance" placeholder="Enter contact number">
+                    </div>
+                    <div class="form-group">
+                        <label for="datePublicAssistance">Preferred Appointment Date</label>
+                        <input type="date" class="form-control" id="datePublicAssistance">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+          <img src="image/imus-logo.png" alt="Barangay Logo" class="footer-logo">
+          <div class="footer-text">
+            <p>Copyright &copy; 2025 The Official Website of Barangay Bucandala 1, Imus Cavite. All Rights Reserved.</p>
+            <p>Bucandala 1 Barangay Hall, Imus, Cavite, Philippines 4103.</p>
+            <p>Call Us Today: +46 40 256 14</p>
+          </div>
+        </div>
+      </div>
+
+    <iframe src="chatbot.html"
+    style="position: fixed; bottom: 10px; right: 10px; width: 340px; height: 800px; border: none; z-index: 999;"> 
+    </iframe>
+
+    <script src="js/services.js"></script>
+
+</body>
+</html>
